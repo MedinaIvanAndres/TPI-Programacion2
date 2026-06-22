@@ -64,7 +64,7 @@ public class SubMenuCategoria {
             String nombre = ValidacionInput.ingresarValidarInputString("Nombre", "Ingrese el nuevo nombre: ", consola);
             String descripcion = ValidacionInput.ingresarValidarInputString("Descripcion", "Ingrese la nueva descripcion: ", consola);
             transaccion.editar(id, nombre, descripcion);
-        } catch (EntidadNoEncontradaException e){
+        } catch (EntidadNoEncontradaException | NombreCategoriaRepetidoException e){
             System.out.println("Error: " + e.getMessage());
         }
     }

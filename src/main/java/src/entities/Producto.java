@@ -104,7 +104,7 @@ public class Producto extends Base{
     }
 
     public void setCategoria(Categoria categoriaNueva) {
-        if (this.categoria != categoriaNueva){ // solo hago algo si no tiene la misma categoria que me llega por parametro
+        if (this.categoria != categoriaNueva){
             Categoria categoriaVieja = this.categoria;
             this.categoria = categoriaNueva;
             if(categoriaVieja != null){

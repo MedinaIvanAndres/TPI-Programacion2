@@ -12,7 +12,7 @@ public class TransaccionCategoria {
     private List<Categoria> categorias = new ArrayList<>();
 
     public List<Categoria> getCategorias() {
-        return Collections.unmodifiableList(categorias); // probar si esto no me afecta al momento de asignar o cambiar la categoria de un producto
+        return Collections.unmodifiableList(categorias);
     }
 
 
@@ -54,6 +54,11 @@ public class TransaccionCategoria {
                     cateParaEditar.getNombre(),cateParaEditar.getId()));
         } else {
             try{
+                for (Categoria catego : categorias) {
+                    if (!catego.isEliminado() && catego.getNombre().equalsIgnoreCase(nombre)) {
+                        throw new NombreCategoriaRepetidoException("Ya existe una categoría con el nombre: "+nombre);
+                    }
+                }
                 cateParaEditar.setNombre(nombre);
                 cateParaEditar.setDescripcion(descri);
                 System.out.println("¡¡¡Categoria con id: #" + id + " actualizada exitosamente!!!");
