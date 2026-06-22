@@ -7,6 +7,7 @@ import src.exception.EliminacionEntidadException;
 import src.exception.EntidadNoEncontradaException;
 import src.transacciones.TransaccionCategoria;
 import src.transacciones.TransaccionProducto;
+import src.transacciones.TransaccionUsuario;
 import src.validaciones.ValidacionInput;
 import java.util.List;
 import java.util.Scanner;
@@ -35,7 +36,7 @@ public class SubMenuProducto {
                     this.listarProducto(trxCategoria);
                     break;
                 case 2:
-                    this.crearProducto(trxCategoria.getCategorias());
+                    this.crearProducto(trxCategoria);
                     break;
                 case 3:
                     this.editarProducto(trxCategoria.getCategorias());
@@ -70,10 +71,12 @@ public class SubMenuProducto {
     }
 
 
-    private void crearProducto(List<Categoria> categorias){
+    private void crearProducto(TransaccionCategoria trxCategoria){
         try{
+            System.out.println("\nCATEGORIAS EXISTENTES:");
+            this.listarCategoria(trxCategoria);
             long id = ValidacionInput.ingresarValidarInputLong("ID", "Ingrese el ID de la categoria del nuevo producto: ", consola);
-            Categoria categoria = validarCategoria(id,categorias);
+            Categoria categoria = validarCategoria(id,trxCategoria.getCategorias());
             String nombre = ValidacionInput.ingresarValidarInputString("Nombre", "Ingrese el nombre del nuevo producto: ", consola);
             String descripcion = ValidacionInput.ingresarValidarInputString("Descripcion", "Ingrese la descripcion del nuevo producto: ", consola);
             String imagen = ValidacionInput.ingresarValidarInputString("Imagen", "Ingrese el archivo imagen del nuevo producto: ", consola);
@@ -83,6 +86,13 @@ public class SubMenuProducto {
             transaccion.crear(nombre, descripcion, precio, stock, imagen, disponible, categoria);
         } catch (EntidadNoEncontradaException enee){
             System.out.println("Error: " + enee.getMessage());
+        }
+    }
+
+    public void listarCategoria(TransaccionCategoria trxCategoria){
+        trxCategoria.listar();
+        if (trxCategoria.getCategorias() == null || trxCategoria.getCategorias().isEmpty()){
+            throw new EntidadNoEncontradaException("Para crear un producto primero dé de alta alguna categoria");
         }
     }
 

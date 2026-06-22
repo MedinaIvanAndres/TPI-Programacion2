@@ -91,6 +91,26 @@ public class ValidacionInput {
                 numero = Integer.parseInt(input);
                 valido = numero >= 0;
                 if(!valido){
+                    System.out.println(mensaje + " invalido. No puede ser negativo");
+                }
+            } catch(NumberFormatException e){
+                valido = false;
+                System.out.println("\"" + input + "\" no es un numero entero valido.");
+            }
+        } while(!valido);
+        return numero;
+    }
+
+    public static int ingresarValidarInputIntPositivo(String mensaje, String mensajeLargo, Scanner pantalla){
+        int numero = 0;
+        boolean valido;
+        do {
+            System.out.print(mensajeLargo);
+            String input = pantalla.nextLine().trim();
+            try {
+                numero = Integer.parseInt(input);
+                valido = numero > 0;
+                if(!valido){
                     System.out.println(mensaje + " invalido. Debe ser positivo");
                 }
             } catch(NumberFormatException e){

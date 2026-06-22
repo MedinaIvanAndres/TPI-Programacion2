@@ -19,7 +19,7 @@ public class DetallePedido extends Base{
     public DetallePedido(int cantidad, Producto producto) {
         super(++numeradorId,false,LocalDateTime.now());
         if (cantidad <= 0 || producto == null){
-            throw new CantidadDetallePedidoException("La cantidad o producto del nuevo detalle son invalidos");
+            throw new CantidadDetallePedidoException("La cantidad o producto del nuevo detalle son invalidos. Cantidad: "+cantidad+" | Producto: "+producto);
         }
         this.producto = producto;
         this.cantidad = cantidad;

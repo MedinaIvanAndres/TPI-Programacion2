@@ -106,7 +106,7 @@ public class SubMenuPedido {
                 this.listarProductos(trxProductos);
                 long idProducto = ValidacionInput.ingresarValidarInputLong("ID", "Ingrese el ID del producto a agregar al nuevo pedido: ", consola);
                 Producto producto = validarProducto(idProducto, trxProductos);
-                int cantidad = ValidacionInput.ingresarValidarInputInt("Cantidad", "Ingrese la cantidad: ", consola);
+                int cantidad = ValidacionInput.ingresarValidarInputIntPositivo("Cantidad", "Ingrese la cantidad: ", consola);
                 this.validarStockProducto(producto, cantidad);
                 transaccion.agregarDetalle(pedido.getId(), cantidad, producto);
                 detalleAgregado = true;
