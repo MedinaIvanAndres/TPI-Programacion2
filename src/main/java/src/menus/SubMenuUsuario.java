@@ -1,8 +1,6 @@
 package src.menus;
 
 import java.util.Scanner;
-
-import src.entities.Pedido;
 import src.entities.Usuario;
 import src.enums.Rol;
 import src.exception.EntidadNoEncontradaException;

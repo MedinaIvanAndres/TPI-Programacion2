@@ -1,11 +1,7 @@
-
 package src;
 
-import src.exception.EntidadNoEncontradaException;
-import src.exception.NombreCategoriaRepetidoException;
 import src.menus.MenuPrincipal;
-import src.transacciones.TransaccionCategoria;
-import java.util.Scanner;
+
 
 /**
  *

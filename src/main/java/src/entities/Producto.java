@@ -4,7 +4,6 @@ package src.entities;
 import src.exception.PrecioInvalidoException;
 import src.exception.StockInvalidoException;
 
-import java.time.LocalDateTime;
 
 /**
  *

@@ -3,7 +3,6 @@ package src.menus;
 import java.util.Scanner;
 
 import src.entities.Categoria;
-import src.entities.Pedido;
 import src.exception.EliminacionEntidadException;
 import src.transacciones.TransaccionCategoria;
 import src.exception.EntidadNoEncontradaException;
