@@ -11,5 +11,5 @@
         <maven.compiler.target>21</maven.compiler.target>
         <exec.mainClass>com.mycompany.medina_ivan_andres_parcial_2_programacion_2.Medina_Ivan_Andres_Parcial_2_Programacion_2</exec.mainClass>
     </properties>
-    <name>Medina_Ivan_Andres_ExamenProg2</name>
+    <name>Medina_Ivan_Andres_TPI_Programacion_2</name>
 </project>

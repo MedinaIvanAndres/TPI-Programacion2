@@ -33,7 +33,7 @@ src/
 1. Abre NetBeans
 2. File → Open Project
 3. Selecciona la carpeta del proyecto
-4. Click derecho en el proyecto → Run
+4. Click derecho en la clase Main → Run
 
 
 ## ✨ Funcionalidades Principales
