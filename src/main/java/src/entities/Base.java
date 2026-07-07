@@ -1,38 +1,26 @@
-
 package src.entities;
 
 import java.time.LocalDateTime;
 
-/**
- *
- * @author Ivan
- */
 public abstract class Base {
-    private final Long id;
-    private boolean eliminado;
+    private Long id;
     private LocalDateTime createdAt;
-    private static Long numeradorId = 0L;
 
     public Base() {
-        this(++numeradorId,false,LocalDateTime.now());
+        this(null, false, LocalDateTime.now());
     }
 
-    public Base(Long id,boolean eliminado, LocalDateTime createdAt) {
+    public Base(Long id, boolean eliminado, LocalDateTime createdAt) {
         this.id = id;
-        this.eliminado = eliminado;
         this.createdAt = createdAt;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public boolean isEliminado() {
-        return eliminado;
-    }
-
-    public void setEliminado(boolean eliminado) {
-        this.eliminado = eliminado;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -44,5 +32,5 @@ public abstract class Base {
     }
 
     @Override
-    public abstract String toString();  
+    public abstract String toString();
 }

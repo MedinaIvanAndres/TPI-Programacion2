@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class ConexionDB {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/tienda_db"
+    private static final String URL = "jdbc:mysql://localhost:3306/foodstore_db"
             + "?useSSL=false"
             + "&serverTimezone=America/Argentina/Buenos_Aires"
             + "&allowPublicKeyRetrieval=true";
@@ -25,7 +25,7 @@ public class ConexionDB {
 
     public static void cerrarConexion() {
         try {
-            if (connection != null && !connection.isClosed()) {
+            if (connection != null && !connection.isClosed()) { // agregar logica para que se cierre sola la conexion
                 connection.close();
                 connection = null;
             }
