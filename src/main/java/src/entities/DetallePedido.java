@@ -13,11 +13,10 @@ public class DetallePedido extends Base{
     private int cantidad;
     private Double subtotal;
     private Producto producto;
-    private static Long numeradorId = 0L;
 
     
     public DetallePedido(int cantidad, Producto producto) {
-        super(++numeradorId,false,LocalDateTime.now());
+        super(null,LocalDateTime.now());
         if (cantidad <= 0 || producto == null){
             throw new CantidadDetallePedidoException("La cantidad o producto del nuevo detalle son invalidos. Cantidad: "+cantidad+" | Producto: "+producto);
         }

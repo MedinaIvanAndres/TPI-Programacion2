@@ -7,10 +7,10 @@ public abstract class Base {
     private LocalDateTime createdAt;
 
     public Base() {
-        this(null, false, LocalDateTime.now());
+        this(null, LocalDateTime.now());
     }
 
-    public Base(Long id, boolean eliminado, LocalDateTime createdAt) {
+    public Base(Long id, LocalDateTime createdAt) {
         this.id = id;
         this.createdAt = createdAt;
     }
