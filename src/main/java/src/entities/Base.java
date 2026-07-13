@@ -10,6 +10,13 @@ public abstract class Base {
         this(null, LocalDateTime.now());
     }
 
+    public boolean isEliminado() {  // borrar este metodo
+        return false;
+    }
+
+    public void setEliminado(boolean eliminado) { // borrar este metodo
+        }
+
     public Base(Long id, LocalDateTime createdAt) {
         this.id = id;
         this.createdAt = createdAt;

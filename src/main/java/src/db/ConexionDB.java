@@ -6,14 +6,11 @@ import java.sql.SQLException;
 
 public class ConexionDB {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/foodstore_db"
-            + "?useSSL=false"
+    private static final String URL = "jdbc:mysql://localhost:3306/foodstore_db" + "?useSSL=false"
             + "&serverTimezone=America/Argentina/Buenos_Aires"
             + "&allowPublicKeyRetrieval=true";
-
     private static final String USER = "root";
     private static final String PASSWORD = "root123";
-
     private static Connection connection = null;
 
     public static Connection getConexion() throws SQLException {
@@ -25,7 +22,7 @@ public class ConexionDB {
 
     public static void cerrarConexion() {
         try {
-            if (connection != null && !connection.isClosed()) { // agregar logica para que se cierre sola la conexion
+            if (connection != null && !connection.isClosed()) {
                 connection.close();
                 connection = null;
             }
