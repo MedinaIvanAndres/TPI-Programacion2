@@ -50,9 +50,7 @@ public class ProductoDAOImpl implements ProductoDAO {
                 + "FROM productos p "
                 + "LEFT JOIN categorias c ON p.categoria_id = c.id";
 
-        try (Connection con = ConexionDB.getConexion();
-             Statement stmt = con.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        try (Connection con = ConexionDB.getConexion(); Statement stmt = con.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 productos.add(mapear(rs));
             }

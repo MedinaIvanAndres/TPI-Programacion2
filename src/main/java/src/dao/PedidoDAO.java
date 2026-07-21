@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface PedidoDAO {
-    void guardar(Pedido pedido, DetallePedido detalle) throws SQLException;
+    void guardar(Pedido pedido) throws SQLException;
     //List<Pedido> listar() throws SQLException;
     //List<Pedido> listarPorUsuario(Long usuarioId) throws SQLException;
     //Pedido buscarPorId(Long id) throws SQLException;
