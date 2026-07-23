@@ -62,6 +62,10 @@ public class Pedido extends Base implements Calculable{
         this.total = total;
     }
 
+    public void setTotal(Double total) {
+        this.total = total;
+    }
+
     public FormaPago getFormaPago() {
         return formaPago;
     }

@@ -18,6 +18,10 @@ public class Usuario extends Base{
     private String contrasenia;
     private Rol rol;
     private List<Pedido> pedidos;
+
+    public Usuario(String nombre, String apellido){
+        this(nombre,apellido,"mail vacio","celular incompleto","contraseña incompleta",Rol.USUARIO);
+    }
     
     public Usuario(String nombre, String apellido, String mail, String celular, String contrasenia, Rol rol) {
         super();

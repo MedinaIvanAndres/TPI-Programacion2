@@ -10,6 +10,15 @@ public abstract class Base {
         this(null, LocalDateTime.now());
     }
 
+    public Base(Long id) {
+        this(id, LocalDateTime.now());
+    }
+
+    public Base(Long id, LocalDateTime createdAt) {
+        this.id = id;
+        this.createdAt = createdAt;
+    }
+
     public boolean isEliminado() {  // borrar este metodo
         return false;
     }
@@ -17,10 +26,7 @@ public abstract class Base {
     public void setEliminado(boolean eliminado) { // borrar este metodo
         }
 
-    public Base(Long id, LocalDateTime createdAt) {
-        this.id = id;
-        this.createdAt = createdAt;
-    }
+
 
     public Long getId() {
         return id;

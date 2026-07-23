@@ -1,9 +1,17 @@
 package src.dao;
 
 import src.db.ConexionDB;
+import src.entities.Categoria;
 import src.entities.DetallePedido;
 import src.entities.Pedido;
+import src.entities.Usuario;
+import src.enums.Estado;
+import src.enums.FormaPago;
+
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PedidoDAOImpl implements PedidoDAO {
@@ -50,6 +58,7 @@ public class PedidoDAOImpl implements PedidoDAO {
             }
         }
     }
+
     private void insertarDetalle(Connection conexion, DetallePedido detalle,Long idPedido) throws SQLException{
         String sql = "INSERT INTO detalles_pedido (cantidad, subtotal, pedido_id, producto_id,created_at) "
                 + "VALUES (?, ?, ?, ?, ?)";
@@ -67,6 +76,44 @@ public class PedidoDAOImpl implements PedidoDAO {
                 detalle.setId(rs.getLong(1));
             }
         }
+    }
+
+    @Override
+    public List<Pedido> listar() throws SQLException {
+        List<Pedido> pedidos = new ArrayList<>();
+        String sql = "SELECT ped.id, ped.fecha, ped.estado, ped.forma_pago, ped.total,ped.usuario_id, ped.created_at, " +
+                "usu.id AS usu_id, usu.nombre AS usu_nombre,usu.apellido AS usu_apellido FROM pedidos ped " +
+                "INNER JOIN usuarios usu ON ped.usuario_id = usu.id";
+
+        try (Connection con = ConexionDB.getConexion();Statement stmt = con.createStatement();ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                pedidos.add(mapear(rs));
+            }
+        }
+
+        return pedidos;
+    }
+
+    private Pedido mapear(ResultSet rs) throws SQLException {
+        Long idPedido = rs.getLong("id");
+        LocalDate fecha = rs.getDate("fecha").toLocalDate();
+        Estado estado = Estado.valueOf(rs.getString("estado"));
+        FormaPago pago = FormaPago.valueOf(rs.getString("forma_pago"));
+        Double total = rs.getDouble("total");
+        LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
+        Long idUsuario = rs.getLong("usu_id");
+        String nombre = rs.getString("usu_nombre");
+        String apellido = rs.getString("usu_apellido");
+
+        Usuario usuario = new Usuario(nombre,apellido);
+        usuario.setId(idUsuario);
+        Pedido pedido = new Pedido(estado,pago,usuario);
+        pedido.setId(idPedido);
+        pedido.setFecha(fecha);
+        pedido.setTotal(total);
+        pedido.setCreatedAt(createdAt);
+
+        return pedido;
     }
 }
 
