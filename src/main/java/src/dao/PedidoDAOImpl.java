@@ -113,10 +113,15 @@ public class PedidoDAOImpl implements PedidoDAO {
         return pedido;
     }
 
-    private List<DetallePedido> buscarDetalles(Long idPedido,Connection con) throws SQLException{
+    private List<DetallePedido> buscarDetalles(Long idPedido, Connection con) throws SQLException {
         List<DetallePedido> detalles = new ArrayList<>();
-        String sql = "SELECT id, cantidad, subtotal, producto_id, created_at FROM detalles_pedido  " +
-                "WHERE pedido_id = ?";
+        String sql = "SELECT det.id, det.cantidad, det.subtotal, det.created_at, " +
+                "pro.id AS pro_id, pro.nombre AS pro_nombre, pro.precio AS pro_precio, " +
+                "pro.descripcion AS pro_descripcion, pro.stock AS pro_stock, " +
+                "pro.imagen AS pro_imagen, pro.disponible AS pro_disponible " +
+                "FROM detalles_pedido det " +
+                "INNER JOIN productos pro ON det.producto_id = pro.id " +
+                "WHERE det.pedido_id = ?";
 
         try (PreparedStatement stmt = con.prepareStatement(sql)) {
             stmt.setLong(1, idPedido);
@@ -132,10 +137,19 @@ public class PedidoDAOImpl implements PedidoDAO {
         Long idDetalle = rs.getLong("id");
         int cantidad = rs.getInt("cantidad");
         Double subtotal = rs.getDouble("subtotal");
-        Long idProducto = rs.getLong("producto_id");
         LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
 
-        Producto producto = new Producto(idProducto);
+        Long idProducto = rs.getLong("pro_id");
+        String nombreProducto = rs.getString("pro_nombre");
+        double precioProducto = rs.getDouble("pro_precio");
+        String descripcionProducto = rs.getString("pro_descripcion");
+        int stockProducto = rs.getInt("pro_stock");
+        String imagenProducto = rs.getString("pro_imagen");
+        boolean disponibleProducto = rs.getBoolean("pro_disponible");
+
+        Producto producto = new Producto(nombreProducto, precioProducto, descripcionProducto, stockProducto, imagenProducto, disponibleProducto, null);
+        producto.setId(idProducto);
+
         DetallePedido detalle = new DetallePedido(cantidad, subtotal, producto);
         detalle.setId(idDetalle);
         detalle.setCreatedAt(createdAt);
