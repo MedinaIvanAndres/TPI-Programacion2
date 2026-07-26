@@ -14,15 +14,25 @@ public class DetallePedido extends Base{
     private Double subtotal;
     private Producto producto;
 
-    
-    public DetallePedido(int cantidad, Producto producto) {
+
+    public DetallePedido(int cantidad, Producto producto){
+        this(cantidad,0.0,producto);
+    };
+
+    public DetallePedido(int cantidad, Double subtotal, Producto producto) {
         super(null,LocalDateTime.now());
         if (cantidad <= 0 || producto == null){
             throw new CantidadDetallePedidoException("La cantidad o producto del nuevo detalle son invalidos. Cantidad: "+cantidad+" | Producto: "+producto);
         }
+
         this.producto = producto;
         this.cantidad = cantidad;
-        this.subtotal = calcularSubtotal();
+
+        if (producto.getPrecio() != 0){
+            this.subtotal = this.calcularSubtotal();
+        } else {
+            this.subtotal = subtotal;
+        }
     }
 
     public int getCantidad() {

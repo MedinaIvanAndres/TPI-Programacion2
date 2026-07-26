@@ -1,10 +1,7 @@
 package src.dao;
 
 import src.db.ConexionDB;
-import src.entities.Categoria;
-import src.entities.DetallePedido;
-import src.entities.Pedido;
-import src.entities.Usuario;
+import src.entities.*;
 import src.enums.Estado;
 import src.enums.FormaPago;
 
@@ -87,14 +84,13 @@ public class PedidoDAOImpl implements PedidoDAO {
 
         try (Connection con = ConexionDB.getConexion();Statement stmt = con.createStatement();ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                pedidos.add(mapear(rs));
+                pedidos.add(mapear(rs,con));
             }
         }
-
         return pedidos;
     }
 
-    private Pedido mapear(ResultSet rs) throws SQLException {
+    private Pedido mapear(ResultSet rs, Connection con) throws SQLException {
         Long idPedido = rs.getLong("id");
         LocalDate fecha = rs.getDate("fecha").toLocalDate();
         Estado estado = Estado.valueOf(rs.getString("estado"));
@@ -107,13 +103,121 @@ public class PedidoDAOImpl implements PedidoDAO {
 
         Usuario usuario = new Usuario(nombre,apellido);
         usuario.setId(idUsuario);
+        List<DetallePedido> detalles = this.buscarDetalles(idPedido,con);
         Pedido pedido = new Pedido(estado,pago,usuario);
         pedido.setId(idPedido);
         pedido.setFecha(fecha);
-        pedido.setTotal(total);
+        this.agregarDetalles(pedido,detalles);
         pedido.setCreatedAt(createdAt);
 
         return pedido;
+    }
+
+    private List<DetallePedido> buscarDetalles(Long idPedido,Connection con) throws SQLException{
+        List<DetallePedido> detalles = new ArrayList<>();
+        String sql = "SELECT id, cantidad, subtotal, producto_id, created_at FROM detalles_pedido  " +
+                "WHERE pedido_id = ?";
+
+        try (PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setLong(1, idPedido);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                detalles.add(mapearDetalles(rs));
+            }
+        }
+        return detalles;
+    }
+
+    private DetallePedido mapearDetalles(ResultSet rs) throws SQLException {
+        Long idDetalle = rs.getLong("id");
+        int cantidad = rs.getInt("cantidad");
+        Double subtotal = rs.getDouble("subtotal");
+        Long idProducto = rs.getLong("producto_id");
+        LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
+
+        Producto producto = new Producto(idProducto);
+        DetallePedido detalle = new DetallePedido(cantidad, subtotal, producto);
+        detalle.setId(idDetalle);
+        detalle.setCreatedAt(createdAt);
+
+        return detalle;
+    }
+
+    private void agregarDetalles(Pedido pedido, List<DetallePedido> detalles){
+        for(DetallePedido detalle : detalles){
+            pedido.addDetallePedido(detalle);
+        }
+    }
+
+    @Override
+    public List<Pedido> listarPorUsuario(Long idUsuario) throws SQLException{
+        List<Pedido> pedidos = new ArrayList<>();
+        String sql = "SELECT ped.id, ped.fecha, ped.estado, ped.forma_pago, ped.total,ped.usuario_id, ped.created_at, " +
+                "usu.id AS usu_id, usu.nombre AS usu_nombre,usu.apellido AS usu_apellido FROM pedidos ped " +
+                "INNER JOIN usuarios usu ON ped.usuario_id = usu.id WHERE ped.usuario_id = ?";
+
+        try (Connection con = ConexionDB.getConexion();PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setLong(1, idUsuario);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                pedidos.add(mapear(rs,con));
+            }
+        }
+        return pedidos;
+    }
+
+    @Override
+    public Pedido buscarPorId(Long idPedido) throws SQLException {
+        String sql = "SELECT ped.id, ped.fecha, ped.estado, ped.forma_pago, ped.total,ped.usuario_id, ped.created_at, " +
+                "usu.id AS usu_id, usu.nombre AS usu_nombre,usu.apellido AS usu_apellido FROM pedidos ped " +
+                "INNER JOIN usuarios usu ON ped.usuario_id = usu.id WHERE ped.id = ?";
+
+        try (Connection con = ConexionDB.getConexion();PreparedStatement stmt = con.prepareStatement(sql)) {
+            stmt.setLong(1, idPedido);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return mapear(rs,con);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void actualizar(Pedido pedido) throws SQLException {
+        String sql = "UPDATE pedidos SET estado = ?, forma_pago = ? WHERE id = ?";
+
+        try (Connection con = ConexionDB.getConexion();PreparedStatement stmt = con.prepareStatement(sql)) {
+
+            stmt.setString(1, pedido.getEstado().name());
+            stmt.setString(2, pedido.getFormaPago().name());
+            stmt.setLong(3, pedido.getId());
+            stmt.executeUpdate();
+        }
+    }
+
+    @Override
+    public void eliminar(Long id) throws SQLException {
+        try (Connection con = ConexionDB.getConexion()) {
+            con.setAutoCommit(false);
+            try {
+                // Primero eliminar los detalles
+                String sqlDetalles = "DELETE FROM detalles_pedido WHERE pedido_id = ?";
+                try (PreparedStatement stmt = con.prepareStatement(sqlDetalles)) {
+                    stmt.setLong(1, id);
+                    stmt.executeUpdate();
+                }
+                // Después eliminar el pedido
+                String sqlPedido = "DELETE FROM pedidos WHERE id = ?";
+                try (PreparedStatement stmt = con.prepareStatement(sqlPedido)) {
+                    stmt.setLong(1, id);
+                    stmt.executeUpdate();
+                }
+                con.commit();
+            } catch (SQLException e) {
+                con.rollback();
+                throw e;
+            }
+        }
     }
 }
 

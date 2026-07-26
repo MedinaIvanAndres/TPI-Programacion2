@@ -20,6 +20,11 @@ public class Producto extends Base{
     private Categoria categoria;
     
     
+    public Producto(Long id){
+        this("Sin nombre,",0,"Sin descripcion",0,"Sin imagen",true,null);
+        this.setId(id);
+    }
+
     public Producto(String nombre, double precio, String descripcion, int stock, String imagen, boolean disponible,Categoria categoria) {
         super();
         setNombre(nombre);

@@ -101,6 +101,11 @@ public class Pedido extends Base implements Calculable{
             this.calcularTotal();
         }
     }
+
+    public void addDetallePedido(DetallePedido detalle) {
+        detalles.add(detalle); // compo
+        this.calcularTotal();
+    }
     
     public DetallePedido findDetallePedidoByProducto(Producto produ){
         int i = 0;
